@@ -224,18 +224,17 @@ def detect_objects(input_bev_maps, model, configs):
             obj_id, det_x, det_y, det_z, det_h, det_w, det_l, det_yaw = row
 
             # convert from metric into pixel coordinates
-            x = (det_y - configs.lim_y[0]) / (configs.lim_y[1] - configs.lim_y[0]) * configs.bev_width
-            y = (det_x - configs.lim_x[0]) / (configs.lim_x[1] - configs.lim_x[0]) * configs.bev_height
-            z = det_z - configs.lim_z[0]
-            w = det_w / (configs.lim_y[1] - configs.lim_y[0]) * configs.bev_width
-            l = det_l / (configs.lim_x[1] - configs.lim_x[0]) * configs.bev_height
-            yaw = -det_yaw
+            x = det_y / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0])
+            y = det_x / configs.bev_width * (configs.lim_y[1] - configs.lim_y[0]) - (configs.lim_y[1] - configs.lim_y[0]) / 2.0
+            z = det_z + configs.lim_z[0]
+            w = det_w / configs.bev_width * (configs.lim_y[1] - configs.lim_y[0])
+            l = det_l / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0])
 
             ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
             if (x > configs.lim_x[0]) and (x < configs.lim_x[1]) and (y > configs.lim_y[0]) and (y < configs.lim_y[1]) and (z > configs.lim_z[0]) and (z < configs.lim_z[1]):
 
             ## step 4 : append the current object to the 'objects' array
-                objects.append([obj_id, x, y, z, det_h, w, l, yaw])
+                objects.append([obj_id, x, y, z, det_h, w, l, det_yaw])
     #######
     ####### ID_S3_EX2 START #######   
     
