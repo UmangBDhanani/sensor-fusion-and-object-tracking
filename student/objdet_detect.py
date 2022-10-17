@@ -60,7 +60,7 @@ def load_configs_model(model_name='darknet', configs=None):
     elif model_name == 'fpn_resnet':
         ####### ID_S3_EX1-3 START #######     
         #######
-        print("student task ID_S3_EX1-3")
+
         configs.model_path = os.path.join(parent_path, 'tools', 'objdet_models', 'resnet')
         configs.pretrained_filename = os.path.join(configs.model_path, 'pretrained', 'fpn_resnet_18_epoch_300.pth')
         configs.arch = 'fpn_resnet'
@@ -118,7 +118,8 @@ def load_configs(model_name='fpn_resnet', configs=None):
     configs.lim_z = [-1, 3]
     configs.lim_r = [0, 1.0] # reflected lidar intensity
     configs.bev_width = 608  # pixel resolution of bev image
-    configs.bev_height = 608 
+    configs.bev_height = 608
+    configs.min_iou = 0.5
 
     # add model-dependent parameters
     configs = load_configs_model(model_name, configs)
@@ -146,7 +147,6 @@ def create_model(configs):
         
         ####### ID_S3_EX1-4 START #######     
         #######
-        print("student task ID_S3_EX1-4")
         model = fpn_resnet.get_pose_net(18, configs.heads, configs.head_conv, configs.imagenet_pretrained)
 
         #######
@@ -196,7 +196,7 @@ def detect_objects(input_bev_maps, model, configs):
             
             ####### ID_S3_EX1-5 START #######     
             #######
-            print("student task ID_S3_EX1-5")
+
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
             outputs['cen_offset'] = _sigmoid(outputs['cen_offset'])
             detections = decode(outputs['hm_cen'], outputs['cen_offset'], outputs['direction'], outputs['z_coor'], outputs['dim'], K=configs.K)
@@ -212,12 +212,12 @@ def detect_objects(input_bev_maps, model, configs):
     ####### ID_S3_EX2 START #######     
     #######
     # Extract 3d bounding boxes from model response
-    print("student task ID_S3_EX2")
+
     objects = [] 
 
-    ## step 1 : check whether there are any detections
+    ##  check whether there are any detections
     if detections.any():
-        ## step 2 : loop over all detections
+        ## loop over all detections
         for row in detections:
 
             # extract detection
@@ -230,10 +230,10 @@ def detect_objects(input_bev_maps, model, configs):
             w = det_w / configs.bev_width * (configs.lim_y[1] - configs.lim_y[0])
             l = det_l / configs.bev_height * (configs.lim_x[1] - configs.lim_x[0])
 
-            ## step 3 : perform the conversion using the limits for x, y and z set in the configs structure
+            ##  perform the conversion using the limits for x, y and z set in the configs structure
             if (x > configs.lim_x[0]) and (x < configs.lim_x[1]) and (y > configs.lim_y[0]) and (y < configs.lim_y[1]) and (z > configs.lim_z[0]) and (z < configs.lim_z[1]):
 
-            ## step 4 : append the current object to the 'objects' array
+            ## append the current object to the 'objects' array
                 objects.append([obj_id, x, y, z, det_h, w, l, det_yaw])
     #######
     ####### ID_S3_EX2 START #######   
