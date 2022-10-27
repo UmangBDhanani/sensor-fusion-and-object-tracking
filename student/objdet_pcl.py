@@ -37,7 +37,6 @@ import misc.objdet_tools as tools
 # visualize lidar point-cloud
 def show_pcl(pcl):
 
-    ####### ID_S1_EX2 START #######     
     #######
 
     # initialize open3d with key callback and create window
@@ -62,13 +61,11 @@ def show_pcl(pcl):
     vis.run()
 
     #######
-    ####### ID_S1_EX2 END #######     
-       
+
 
 # visualize range image
 def show_range_image(frame, lidar_name):
 
-    ####### ID_S1_EX1 START #######     
     #######
     # extract lidar data and range image for the roof-mounted lidar
     lidar = [obj for obj in frame.lasers if obj.name == lidar_name][0]
@@ -99,7 +96,6 @@ def show_range_image(frame, lidar_name):
     img_range_intensity = img_range_intensity.astype(np.uint8)
 
     #######
-    ####### ID_S1_EX1 END #######     
     
     return img_range_intensity
 
@@ -127,7 +123,6 @@ def bev_from_pcl(lidar_pcl, configs):
     lidar_pcl[:, 2] = lidar_pcl[:, 2] - configs.lim_z[0]
 
     # convert sensor coordinates to bev-map coordinates (center is bottom-middle)
-    ####### ID_S2_EX1 START #######
     #######
 
     # bev-map discretization by dividing x-range by the bev-image height (see configs)
@@ -145,10 +140,8 @@ def bev_from_pcl(lidar_pcl, configs):
     show_pcl(lidar_pcl_cpy)
 
     #######
-    ####### ID_S2_EX1 END #######     
     
     # Compute intensity layer of the BEV map
-    ####### ID_S2_EX2 START #######     
     #######
 
     # create a numpy array filled with zeros which has the same dimensions as the BEV map
@@ -182,10 +175,8 @@ def bev_from_pcl(lidar_pcl, configs):
     '''
 
     #######
-    ####### ID_S2_EX2 END #######
 
     # Compute height layer of the BEV map
-    ####### ID_S2_EX3 START #######
     #######
 
     lidar_pcl_top = lidar_intensity_channel
@@ -215,7 +206,6 @@ def bev_from_pcl(lidar_pcl, configs):
     '''
 
     #######
-    ####### ID_S2_EX3 END #######
 
     # Compute density layer of the BEV map
     density_map = np.zeros((configs.bev_height + 1, configs.bev_width + 1))

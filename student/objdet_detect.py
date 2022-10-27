@@ -58,7 +58,6 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.use_giou_loss = False
 
     elif model_name == 'fpn_resnet':
-        ####### ID_S3_EX1-3 START #######     
         #######
 
         configs.model_path = os.path.join(parent_path, 'tools', 'objdet_models', 'resnet')
@@ -92,7 +91,6 @@ def load_configs_model(model_name='darknet', configs=None):
         configs.num_input_features = 4
 
         #######
-        ####### ID_S3_EX1-3 END #######     
 
     else:
         raise ValueError("Error: Invalid model name")
@@ -145,13 +143,10 @@ def create_model(configs):
     elif 'fpn_resnet' in configs.arch:
         print('using ResNet architecture with feature pyramid')
         
-        ####### ID_S3_EX1-4 START #######     
         #######
         model = fpn_resnet.get_pose_net(18, configs.heads, configs.head_conv, configs.imagenet_pretrained)
-
         #######
-        ####### ID_S3_EX1-4 END #######     
-    
+
     else:
         assert False, 'Undefined model backbone'
 
@@ -193,8 +188,6 @@ def detect_objects(input_bev_maps, model, configs):
 
         elif 'fpn_resnet' in configs.arch:
             # decode output and perform post-processing
-            
-            ####### ID_S3_EX1-5 START #######     
             #######
 
             outputs['hm_cen'] = _sigmoid(outputs['hm_cen'])
@@ -205,11 +198,7 @@ def detect_objects(input_bev_maps, model, configs):
             detections = detections[0][1]
             print('--Detections--{}'.format(detections))
             #######
-            ####### ID_S3_EX1-5 END #######     
 
-            
-
-    ####### ID_S3_EX2 START #######     
     #######
     # Extract 3d bounding boxes from model response
 
@@ -236,7 +225,6 @@ def detect_objects(input_bev_maps, model, configs):
             ## append the current object to the 'objects' array
                 objects.append([obj_id, x, y, z, det_h, w, l, det_yaw])
     #######
-    ####### ID_S3_EX2 START #######   
     
     return objects    
 

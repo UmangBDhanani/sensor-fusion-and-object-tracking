@@ -43,8 +43,6 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
         if valid: # exclude all labels from statistics which are not considered valid
             
             # compute intersection over union (iou) and distance between centers
-
-            ####### ID_S4_EX1 START #######     
             #######
 
             ## extract the four corners of the current label bounding-box
@@ -79,7 +77,6 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
                     matches_lab_det.append([iou, dist_x, dist_y, dist_z])
                     true_positives += 1
 
-            ####### ID_S4_EX1 END #######
             
         # find best match and compute metrics
         if matches_lab_det:
@@ -88,7 +85,6 @@ def measure_detection_performance(detections, labels, labels_valid, min_iou=0.5)
             center_devs.append(best_match[1:])
 
 
-    ####### ID_S4_EX2 START #######     
     #######
     # compute positives and negatives for precision/recall
     
@@ -121,8 +117,7 @@ def compute_performance_stats(det_performance_all):
         ious.append(item[0])
         center_devs.append(item[1])
         pos_negs.append(item[2])
-    
-    ####### ID_S4_EX3 START #######     
+
     #######
 
     ## extract the total number of positives, true positives, false negatives and false positives
@@ -138,8 +133,7 @@ def compute_performance_stats(det_performance_all):
     ## compute recall
     recall = true_positives / (true_positives + false_negatives)
 
-    #######    
-    ####### ID_S4_EX3 END #######     
+    #######
     print('precision = ' + str(precision) + ", recall = " + str(recall))   
 
     # serialize intersection-over-union and deviations in x,y,z

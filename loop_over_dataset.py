@@ -43,7 +43,7 @@ from student.filter import Filter
 from student.trackmanagement import Trackmanagement
 from student.association import Association
 from student.measurements import Sensor, Measurement
-from misc.evaluation import plot_tracks, plot_rmse, make_movie
+from misc.evaluation import plot_tracks, plot_rmse, make_movie, make_detection_movie
 import misc.params as params 
  
 ##################
@@ -83,7 +83,7 @@ np.random.seed(10) # make random values predictable
 exec_data = ['pcl_from_rangeimage'] # options are 'pcl_from_rangeimage', 'load_image'
 exec_detection = ['bev_from_pcl', 'detect_objects','validate_object_labels', 'measure_detection_performance'] # options are 'bev_from_pcl', 'detect_objects', 'validate_object_labels', 'measure_detection_performance'; options not in the list will be loaded from file
 exec_tracking = [] # options are 'perform_tracking'
-exec_visualization = ['show_detection_performance'] # options are 'show_range_image','front_camera_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie'
+exec_visualization = ['show_detection_performance'] # options are 'show_range_image','front_camera_image', 'show_bev', 'show_pcl', 'show_labels_in_image', 'show_objects_and_labels_in_bev', 'show_objects_in_bev_labels_in_camera', 'show_tracks', 'show_detection_performance', 'make_tracking_movie', 'make_detection_movie'
 exec_list = make_exec_list(exec_detection, exec_tracking, exec_visualization, exec_data)
 vis_pause_time = 0 # set pause time between frames in ms (0 = stop between frames until key is pressed)
 
@@ -206,8 +206,11 @@ while True:
             cv2.waitKey(vis_pause_time)         
 
         if 'show_objects_in_bev_labels_in_camera' in exec_list:
-            tools.show_objects_in_bev_labels_in_camera(detections, lidar_bev, image, frame.laser_labels, valid_label_flags, camera_calibration, configs_det)
-            cv2.waitKey(vis_pause_time)               
+            img = tools.show_objects_in_bev_labels_in_camera(detections, lidar_bev, image, frame.laser_labels, valid_label_flags, camera_calibration, configs_det)
+            fname = results_fullpath + '/objdet%03d.png' % cnt_frame
+            print('Saving frame', fname)
+            cv2.imwrite(fname,img)
+            cv2.waitKey(vis_pause_time)
 
 
         #################################
@@ -291,3 +294,6 @@ if 'show_tracks' in exec_list:
 ## Make movie from tracking results    
 if 'make_tracking_movie' in exec_list:
     make_movie(results_fullpath)
+
+if 'make_detection_movie' in exec_list:
+    make_detection_movie(results_fullpath)

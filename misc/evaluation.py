@@ -245,3 +245,20 @@ def make_movie(path):
 
     cv2.destroyAllWindows()
     video.release()
+
+def make_detection_movie(path):
+    # read track plots
+    images = [img for img in sorted(os.listdir(path)) if img.endswith(".png")]
+    frame = cv2.imread(os.path.join(path, images[0]))
+    height, width, layers = frame.shape
+
+    # save with 10fps to result dir
+    video = cv2.VideoWriter(os.path.join(path, 'Detection_results.avi'), 0, 10, (width,height))
+
+    for image in images:
+        fname = os.path.join(path, image)
+        video.write(cv2.imread(fname))
+        os.remove(fname) # clean up
+
+    cv2.destroyAllWindows()
+    video.release()
